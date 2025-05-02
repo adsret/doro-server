@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>DOROroom</title>
+</head>
+<body>
+    <h2>歡迎來到你的個人空間</h2>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="fileInput">選擇圖片（gif, png, jpg）：</label><br><br>
+        <input type="file" id="fileInput" name="image" accept=".gif,.png,.jpg,.jpeg" required><br><br>
+        <button type="button" onclick="uploadImage()">上傳圖片</button>
+    </form>
+
+    <p id="result" style="color: green;"></p>
+
+    <script>
+        async function uploadImage() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length === 0) {
+                alert("請選擇一張圖片");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerText = result.message || result.error;
+        }
+    </script>
+</body>
+</html>

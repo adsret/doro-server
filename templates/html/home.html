@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>DORO</title>
+    <link rel="stylesheet" href="/css/glitch.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .offcanvas-end {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;              /* ✅ 禁止滾動 */
+        }
+
+        body {
+            background-image: url('/img/sy.gif');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            cursor: url("/img/doro.png"), auto;
+        }
+
+      </style>
+      
+    
+    <h1 class="glitch-text flicker-text" data-text="Welcome DORO World !">Welcome DORO World !</h1>
+
+    <p id="result" style="color: green; margin-top: 10px;"></p>
+
+    <!-- DORO hacker 視覺區塊 -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 80px;">
+        <h2 class="glitch-text flicker-text" data-text="DORO hacker!!!!">DORO hacker!!!!</h2>
+        <img src="/img/DORO_hacker.gif" alt="DORO hacker!!!!" style="max-width: 500px; width: 100%; height: auto; margin: 20px 0;">
+        <button class="cyber-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAction">ＯＨ！ ＹＥＳ！ ＤＯＲＯ ＴＩＭＥ！</button>
+    </div>
+
+    <!-- 主功能側欄（登入 / 註冊 / 登出） -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAction">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">DORO 功能選單</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <button class="btn btn-primary w-100 mb-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLogin">登入</button>
+        <button class="btn btn-success w-100 mb-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister">註冊</button>
+        <button class="btn btn-danger w-100" onclick="logout()">登出</button>
+      </div>
+    </div>
+
+    <!-- 登入側欄 -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasLogin">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">登入</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <input type="text" class="form-control mb-2" placeholder="帳號" id="loginUsername">
+        <input type="password" class="form-control mb-2" placeholder="密碼" id="loginPassword">
+        <button class="btn btn-primary w-100" onclick="login()">確認登入</button>
+      </div>
+    </div>
+
+    <!-- 註冊側欄 -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRegister">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">註冊</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <input type="text" class="form-control mb-2" placeholder="帳號" id="registerUsername">
+        <input type="password" class="form-control mb-2" placeholder="密碼" id="registerPassword">
+        <button class="btn btn-success w-100" onclick="register()">確認註冊</button>
+      </div>
+    </div>
+
+    <script>
+        async function register() {
+            const data = {
+                username: document.getElementById("registerUsername").value,
+                password: document.getElementById("registerPassword").value
+            };
+
+            const res = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            document.getElementById("result").innerText = result.message || result.error;
+        }
+
+        async function login() {
+            const data = {
+                username: document.getElementById("loginUsername").value,
+                password: document.getElementById("loginPassword").value
+            };
+
+            const res = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            if (result.message === "登入成功") {
+                window.location.href = "/myroom";
+            } else {
+                document.getElementById("result").innerText = result.error;
+            }
+        }
+
+        async function logout() {
+            const res = await fetch("/logout");
+            const result = await res.json();
+            document.getElementById("result").innerText = result.message;
+        }
+    </script>
+</body>
+</html>
